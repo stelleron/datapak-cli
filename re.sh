@@ -1,2 +1,2 @@
 make datapak
-./build/datapak help
+./build/datapak new premake5.lua
