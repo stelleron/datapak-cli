@@ -39,7 +39,8 @@ struct Argument {
 void handleArgs(int count, char** arguments) {
     // First create an argument
     Argument arg(count, arguments);
-    // Now handle them
+    // Now create the datapak and handle arguments
+    Datapak dat;
     // 0 args
     if (arg.size == 0) {
         LOG("Error: Too few arguments provided!");
@@ -49,11 +50,10 @@ void handleArgs(int count, char** arguments) {
         // Help command
         if (arg.args[1] == "help") {
            LOG("Datapak is a CLI tool to package your files into a single file!");
-           return;
         }
         else if(arg.args[1] == "new") {
             LOG("Warning: No name provided. Using default name file.datapak instead..");
-            Datapak dat("file.datapak");
+            dat.load("file.datapak");
         }
         else if (arg.args[1] == "list") {
             LOG("Listing all files..");
