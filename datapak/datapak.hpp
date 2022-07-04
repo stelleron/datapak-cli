@@ -3,7 +3,6 @@
     #include <vector>
     #include <string>
     #include <stdio.h>
-
     #define DATAPAK_VERSION "1.0.0"
     // Struct for storing the datapak file (extension blind)
     struct Datapak {
@@ -47,6 +46,9 @@
             std::string read(const char* alias); // Decompress & read data from the datapak 
 
             void remove(const char* alias); // Remove data under a given alias 
+            void rename(const char* alias, const char* new_alias); // Rename a file under a given alias
+            void list(); // List all files stored in the datapak
+
             void purge(); // Reset the datapak (USE VERY CAREFULLY!)
             void close(); // Close the file
 

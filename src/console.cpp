@@ -36,21 +36,32 @@ struct Argument {
 };
 
 // Handle the argument types
-Argument handleArgs(int count, char** arguments) {
+void handleArgs(int count, char** arguments) {
     // First create an argument
     Argument arg(count, arguments);
     // Now handle them
+    // 0 args
     if (arg.size == 0) {
-        LOG("Datpak: Too few arguments provided!");
+        LOG("Error: Too few arguments provided!");
     }
+    // 1 arg
     else if (arg.size == 1) {
+        // Help command
         if (arg.args[1] == "help") {
            LOG("Datapak is a CLI tool to package your files into a single file!");
+           return;
+        }
+        else if(arg.args[1] == "new") {
+            LOG("Warning: No name provided. Using default name file.datapak instead..");
+            Datapak dat("file.datapak");
+        }
+        else if (arg.args[1] == "list") {
+            LOG("Listing all files..");
+            
         }
     }
-    return arg;
 }
 
 int main(int argc, char** argv) {
-    Argument arg = handleArgs(argc, argv);
+    handleArgs(argc, argv);
 }
