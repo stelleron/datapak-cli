@@ -88,7 +88,7 @@ struct Argument {
                     ERROR("Error: Nothing to add!");
                 }
                 else {
-                    switch getPathType(args[3]) {
+                    switch (getPathType(args[3])) {
                         case FILE_PATH: cmdType = CMD_ADD_FILE;
                         case DIR_PATH: cmdType = CMD_ADD_DIR;
                         default: break;

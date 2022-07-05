@@ -6,8 +6,12 @@ make all -f /Users/donti/Desktop/arcanist/Makefile --print-data-base --no-builti
 # PARTICULAR PURPOSE.
 
 # This program built for i386-apple-darwin11.3.0
+ 
+make: /Users/donti/Desktop/arcanist/Makefile: No such file or directory
+make: *** No rule to make target `/Users/donti/Desktop/arcanist/Makefile'.  Stop.
 
-# Make data base, printed on Mon Jul  4 21:31:07 2022
+
+# Make data base, printed on Tue Jul  5 19:17:01 2022
 
 # Variables
 
@@ -36,7 +40,7 @@ MAKEFILE_LIST :=
 # environment
 VSCODE_VERBOSE_LOGGING = true
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /var/folders/sh/x11xh2395m90d37_d1gw9vkr0000gp/T/vscode-ipc-3c6fbe40-6011-4315-9179-f0a7bc99f08a.sock
+VSCODE_IPC_HOOK_EXTHOST = /var/folders/sh/x11xh2395m90d37_d1gw9vkr0000gp/T/vscode-ipc-d46d3ba1-98c2-4615-b130-ffd447d275fa.sock
 # environment
 VSCODE_CWD = /
 # environment
@@ -189,9 +193,6 @@ all:
 # strcache size: total = 4096 / max = 4096 / min = 4096 / avg = 4096
 # strcache free: total = 4057 / max = 4057 / min = 4057 / avg = 4057
 
-# Finished Make data base on Mon Jul  4 21:31:07 2022
+# Finished Make data base on Tue Jul  5 19:17:01 2022
 
  
-make: /Users/donti/Desktop/arcanist/Makefile: No such file or directory
-make: *** No rule to make target `/Users/donti/Desktop/arcanist/Makefile'.  Stop.
-
