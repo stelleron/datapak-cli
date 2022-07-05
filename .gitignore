@@ -2,3 +2,4 @@ all.sh
 commit.sh
 re.sh
 .vscode/
+build/
