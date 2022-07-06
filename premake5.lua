@@ -31,8 +31,9 @@ project "datapak"
     objdir "build/obj/"
 
     files {"src/**.cpp"}
-    includedirs {"datapak/"}
-    links {"datapak-sys"}
+    includedirs {"datapak/", "external/"}
+    libdirs {"external/"}
+    links {"datapak-sys", "spdlog"}
 
     
     filter "configurations:Debug"

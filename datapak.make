@@ -24,15 +24,15 @@ ifeq ($(config),debug)
   TARGET = $(TARGETDIR)/datapak
   OBJDIR = build/obj/Debug/datapak
   DEFINES += -DDEBUG
-  INCLUDES += -Idatapak
+  INCLUDES += -Idatapak -Iexternal
   FORCE_INCLUDE +=
   ALL_CPPFLAGS += $(CPPFLAGS) -MMD -MP $(DEFINES) $(INCLUDES)
   ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -g
   ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -g -std=c++17
   ALL_RESFLAGS += $(RESFLAGS) $(DEFINES) $(INCLUDES)
-  LIBS += build/libdatapak-sys.a
+  LIBS += build/libdatapak-sys.a -lspdlog
   LDDEPS += build/libdatapak-sys.a
-  ALL_LDFLAGS += $(LDFLAGS) -m64
+  ALL_LDFLAGS += $(LDFLAGS) -Lexternal -m64
   LINKCMD = $(CXX) -o "$@" $(OBJECTS) $(RESOURCES) $(ALL_LDFLAGS) $(LIBS)
   define PREBUILDCMDS
   endef
@@ -59,15 +59,15 @@ ifeq ($(config),release)
   TARGET = $(TARGETDIR)/datapak
   OBJDIR = build/obj/Release/datapak
   DEFINES += -DNDEBUG
-  INCLUDES += -Idatapak
+  INCLUDES += -Idatapak -Iexternal
   FORCE_INCLUDE +=
   ALL_CPPFLAGS += $(CPPFLAGS) -MMD -MP $(DEFINES) $(INCLUDES)
   ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -O2
   ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -O2 -std=c++17
   ALL_RESFLAGS += $(RESFLAGS) $(DEFINES) $(INCLUDES)
-  LIBS += build/libdatapak-sys.a
+  LIBS += build/libdatapak-sys.a -lspdlog
   LDDEPS += build/libdatapak-sys.a
-  ALL_LDFLAGS += $(LDFLAGS) -m64
+  ALL_LDFLAGS += $(LDFLAGS) -Lexternal -m64
   LINKCMD = $(CXX) -o "$@" $(OBJECTS) $(RESOURCES) $(ALL_LDFLAGS) $(LIBS)
   define PREBUILDCMDS
   endef
@@ -82,6 +82,7 @@ endif
 
 OBJECTS := \
 	$(OBJDIR)/console.o \
+	$(OBJDIR)/logger.o \
 
 RESOURCES := \
 
@@ -141,6 +142,9 @@ $(OBJECTS): | $(OBJDIR)
 endif
 
 $(OBJDIR)/console.o: src/console.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/logger.o: src/logger.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 
