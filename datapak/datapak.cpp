@@ -31,7 +31,7 @@ T* decompressData(const T* compData, int compSize, int* size) {
     T* buffer = (T*)realloc(data, length);
 
     if (buffer != NULL) data = buffer;
-    else LOG("SYSTEM: Failed to re-allocate required decompression memory");
+    else LOG("Failed to re-allocate required decompression memory");
 
     *size = length;
     return data;
@@ -89,9 +89,9 @@ void Datapak::load(const char* filename) {
         // First read the header
         fread(&chunks[x].header, sizeof(chunks[x].header), 1, file);
         // Then the data
-        chunks[x].data = new char[chunks[x].header.baseSize];
-        fread(chunks[x].data, chunks[x].header.baseSize, 1, file);
-        // NOTE: Remember to free all aloocated data
+        chunks[x].data = new char[chunks[x].header.compSize];
+        fread(chunks[x].data, chunks[x].header.compSize, 1, file);
+        // NOTE: Remember to free all allocated data
     }
     //== Finally close the file and save the filename for later
     LOG("Loaded all chunks!");
@@ -172,6 +172,13 @@ std::string Datapak::read(const char* alias) {
         FIND_ERROR;
         return 0;
     }    
+}
+
+unsigned char* Datapak::readBytes(const char* alias) {
+    std::string readStr = read(alias);
+    unsigned char* source = new unsigned char[chunks[ptr].header.baseSize];
+    strcpy((char*)source, readStr.c_str());
+    return source;
 }
 
 void Datapak::close() {
