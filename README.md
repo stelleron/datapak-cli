@@ -20,7 +20,6 @@ For using the premake5.lua version, download Premake from [here](https://premake
 `find [datapak] [alias]`: Check whether a file exists in the datapak by its alias.
 `rename [datapak] [alias] [nalias]`: Rename a file in a given datapak to a new name.
 `remove [datapak] [alias]`: Remove a file under the given name in a datapak.
-`extract [datapak]`: Extract the datapak into a file with the same name as the datapak.
 `extract [datapak] [alias]`: Extract a file under the given alias.
 
 ### Live Editing Mode (currently not supported)

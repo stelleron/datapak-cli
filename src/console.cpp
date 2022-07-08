@@ -160,16 +160,8 @@ void handleArgs(int argc, char** argv, Datapak* dat) {
             std::string data = dat->read(arg.argArray[2].c_str());
             nFile.write(data.c_str(), data.size());
         }
-        else if (arg.argArray.size() == 2) {
-            // First create a new directory
-            int check = mkdir(arg.argArray[1].c_str(), 0777);
-            if (!check)
-                INFO("Created a directory to extract to!");
-            else {
-                ERROR("Could not create extraction directory!");
-            } 
-            // Now write files in it using it as a base directory
-            
+        else {
+            ERROR("Error: Provided invalid number of call arguments!");
         }
     }
     else {
