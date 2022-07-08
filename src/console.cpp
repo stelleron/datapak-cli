@@ -1,6 +1,7 @@
 #include "datapak.hpp"
 #include "logger.hpp"
 #include <sys/stat.h>
+#include <sys/types.h>
 #include <filesystem>
 #include <iostream>
 #include <fstream>
@@ -118,10 +119,18 @@ void handleArgs(int argc, char** argv, Datapak* dat) {
             ERROR("Error: Path given is not to a file!");
         }
         else {
-            // Load and add the file source to it
-            dat->load(dName);
-            std::string fileSrc = loadFile(arg.argArray[2].c_str());
-            dat->write(arg.argArray[2].c_str(), fileSrc);
+            // If no additional alias is given
+            if (arg.argArray.size() == 3) {
+                // Load and add the file source to it
+                dat->load(dName);
+                std::string fileSrc = loadFile(arg.argArray[2].c_str());
+                dat->write(arg.argArray[2].c_str(), fileSrc);
+            }
+            else if (arg.argArray.size() == 4) {
+                dat->load(dName);
+                std::string fileSrc = loadFile(arg.argArray[2].c_str());
+                dat->write(arg.argArray[3].c_str(), fileSrc);
+            }
         }
     }
     else if (arg.argArray[0] == "list") {
@@ -140,6 +149,28 @@ void handleArgs(int argc, char** argv, Datapak* dat) {
         GET_DATAPAK_NAME(1);
         dat->load(dName);
         dat->remove(arg.argArray[2].c_str());
+    }
+    else if (arg.argArray[0] == "extract") {
+        GET_DATAPAK_NAME(1);
+        dat->load(dName);
+        // Check if 2 or 3 arguments are given
+        if (arg.argArray.size() == 3) {
+            std::ofstream nFile;
+            nFile.open(arg.argArray[2], std::ios::out);
+            std::string data = dat->read(arg.argArray[2].c_str());
+            nFile.write(data.c_str(), data.size());
+        }
+        else if (arg.argArray.size() == 2) {
+            // First create a new directory
+            int check = mkdir(arg.argArray[1].c_str(), 0777);
+            if (!check)
+                INFO("Created a directory to extract to!");
+            else {
+                ERROR("Could not create extraction directory!");
+            } 
+            // Now write files in it using it as a base directory
+            
+        }
     }
     else {
         ERROR("Error: Provided invalid call argument! Type \"datapak help\" to find a list of valid arguments");
