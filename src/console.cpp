@@ -77,7 +77,20 @@ void handleArgs(int argc, char** argv, Datapak* dat) {
     Argument arg(argc, argv);
     // Now handle them
     if (arg.argArray[0] == "help") {
-        INFO("Datapak CLI is a command-line interface for creating, packaging, modifying and extracting .datapak(extension not needed) files!\n Current Version: 1.0.0");
+        INFO("Datapak CLI is a command-line interface for creating, packaging, modifying and extracting .datapak(extension not needed) files!\n" 
+             "Current Version: 1.0.0\n"
+             "Commands:\n"
+             "  new: Create a new datapak with a default name (file.datapak).\n"
+             "  new [datapak]: Create a new datapak with the given filename.\n"
+             "  load [datapak]: Load a datapak and enter live editing mode.\n"
+             "  add_dir [datapak] [dir]: Add all files in a given directory to the datapak. The file aliases are determined by their path from the given root directory.\n"
+             "  add_file [datapak] [file]`: Add a given file to the datapak.\n"
+             "  add_file [datapak] [file] [alias]: Add a given file to the datapak under a new alias.\n"
+             "  list [datapak]: List all file aliases inside a datapak.\n"
+             "  find [datapak] [alias]: Check whether a file exists in the datapak by its alias.\n"
+             "  rename [datapak] [alias] [nalias]: Rename a file in a given datapak to a new name.\n"
+             "  remove [datapak] [alias]: Remove a file under the given name in a datapak.\n"
+             "  extract [datapak] [alias]: Extract a file under the given alias.\n");
     }
     else if (arg.argArray[0] == "new") {
         if (arg.argArray.size() == 1) {
