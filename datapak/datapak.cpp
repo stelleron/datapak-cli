@@ -225,6 +225,10 @@ void Datapak::list() {
     }
 }
 
+int Datapak::getNumChunks() {
+    return chunks.size();
+}
+
 void Datapak::rename(const char* alias, const char* new_alias) {
     if(find(alias)) {
         strcpy(chunks[ptr].header.alias, new_alias);

@@ -53,7 +53,9 @@
             void rename(const char* alias, const char* new_alias); // Rename a file under a given alias
             void list(); // List all files stored in the datapak
 
+            int getNumChunks(); // Get the number of chunks in the file
+
             void purge(); // Reset the datapak (USE VERY CAREFULLY!)
-            void close(); // Close the file¯
+            void close(); // Close the file
     };
 #endif

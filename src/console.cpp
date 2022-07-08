@@ -18,7 +18,6 @@ struct Argument {
             argArray.resize(count - 1);
             for (int x = 1; x < count; x++) {
                 argArray[x - 1] = args[x];
-                INFO("{0}", argArray[x - 1]);
             }
         }
     }
@@ -124,6 +123,26 @@ void handleArgs(int argc, char** argv, Datapak* dat) {
             std::string fileSrc = loadFile(arg.argArray[2].c_str());
             dat->write(arg.argArray[2].c_str(), fileSrc);
         }
+    }
+    else if (arg.argArray[0] == "list") {
+       GET_DATAPAK_NAME(1);
+       dat->load(dName);
+       INFO("The given datapak is home to {0} files. Listing them all: \n", dat->getNumChunks());
+       dat->list(); 
+       INFO("\n");
+    }
+    else if (arg.argArray[0] == "rename") {
+        GET_DATAPAK_NAME(1);
+        dat->load(dName);
+        dat->rename(arg.argArray[2].c_str(), arg.argArray[3].c_str());
+    }
+    else if (arg.argArray[0] == "remove") {
+        GET_DATAPAK_NAME(1);
+        dat->load(dName);
+        dat->remove(arg.argArray[2].c_str());
+    }
+    else {
+        ERROR("Error: Provided invalid call argument! Type \"datapak help\" to find a list of valid arguments");
     }
 }
 

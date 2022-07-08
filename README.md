@@ -23,7 +23,7 @@ For using the premake5.lua version, download Premake from [here](https://premake
 `extract [datapak]`: Extract the datapak into a file with the same name as the datapak.
 `extract [datapak] [alias]`: Extract a file under the given alias.
 
-### Live Editing Mode
+### Live Editing Mode (currently not supported)
 Allows you to interface with the Datapak CLI without needing to type its name each time you call a command. Additionally comes with a `close` command to close the Datapak CLI once you're done.
 
 ## License
