@@ -1,6 +1,10 @@
 #include "datapak.hpp"
 #include "logger.hpp"
 #include <sys/stat.h>
+#include <filesystem>
+#include <iostream>
+#include <fstream>
+#include <sstream>
 
 #define GET_DATAPAK_NAME(x) const char* dName = arg.argArray[x].c_str()
 
@@ -20,8 +24,52 @@ struct Argument {
     }
 };
 
-void exploreDir(const char* dirname, std::vector<std::string> *buffer) {
+// Enum to store path types
+enum PathType {
+    FILE_PATH = 0,
+    DIR_PATH,
+    UNKNOWN_PATH,
+};
+
+// Check if a given path leads to a file or a directory 
+inline PathType getPathType(const char* path) {
+    struct stat buffer;
+    stat(path, &buffer);
+    if (buffer.st_mode & S_IFREG ) 
+        return FILE_PATH;
+    else if (buffer.st_mode & S_IFDIR )
+        return DIR_PATH;
+    else
+        return UNKNOWN_PATH;
+}
+
+// Load a file from the given filename(assume validation) 
+inline std::string loadFile(const std::string& fPath) {
+    std::ifstream fileStream;
+    fileStream.open(fPath, std::ios::in);
+    std::stringstream buffer;
+    buffer << fileStream.rdbuf() << '\0';
+    return buffer.str();
+}
+
+void exploreDir(std::string& dirname, std::vector<std::string> *buffer, std::string& rootpath) {
     // Explore the directory recursively
+    if (getPathType(dirname.c_str()) == DIR_PATH) {
+        // Now loop through the folder
+        for (const auto& entry : std::filesystem::directory_iterator(dirname)) {
+            if (getPathType(entry.path().c_str()) == FILE_PATH) {
+                buffer->push_back(entry.path().c_str());
+            }
+            else if (getPathType(entry.path().c_str()) == DIR_PATH) {
+                std::string newRootPath = rootpath + dirname;
+                std::string dirPath = entry.path().string();
+                exploreDir(dirPath, buffer, newRootPath);
+            }
+        }
+    }
+    else {
+        ERROR("Error: Given invalid path! Path must be an existing directory");
+    }
 }
 
 void handleArgs(int argc, char** argv, Datapak* dat) {
@@ -47,8 +95,35 @@ void handleArgs(int argc, char** argv, Datapak* dat) {
     else if (arg.argArray[0] == "add_dir") {
         GET_DATAPAK_NAME(1);
         // Recursively find all files in the directory
+        std::string rootpath = "";
         std::vector<std::string> filenameBuffer;
-        exploreDir(arg.argArray[2].c_str(), &filenameBuffer);
+        exploreDir(arg.argArray[2], &filenameBuffer, rootpath);
+        INFO("");
+        for (int x = 0; x < filenameBuffer.size(); x++) {
+            INFO("{0}", filenameBuffer[x].c_str());
+        }
+        // Now add them all to the datapak   
+        dat->load(dName);
+        INFO("Found {0} files. Reading them all..", filenameBuffer.size());
+        std::string fileSrc;
+        for (int x = 0; x < filenameBuffer.size(); x++) {
+            fileSrc = loadFile(filenameBuffer[x]);
+            dat->write(filenameBuffer[x].c_str(), fileSrc);
+        }
+
+    }
+    else if (arg.argArray[0] == "add_file") {
+        GET_DATAPAK_NAME(1);
+        // Check if the file being added is actually a file
+        if (getPathType(arg.argArray[2].c_str()) != FILE_PATH) {
+            ERROR("Error: Path given is not to a file!");
+        }
+        else {
+            // Load and add the file source to it
+            dat->load(dName);
+            std::string fileSrc = loadFile(arg.argArray[2].c_str());
+            dat->write(arg.argArray[2].c_str(), fileSrc);
+        }
     }
 }
 
@@ -56,6 +131,7 @@ int main(int argc, char** argv) {
     // First initialise the logger
     Logger::init();
     // Then handle the arguments and create the datapak
-    Datapak* dat;
+    Datapak* dat = new Datapak();
     handleArgs(argc, argv, dat);
+    delete dat;
 }
