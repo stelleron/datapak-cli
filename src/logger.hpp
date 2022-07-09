@@ -11,5 +11,5 @@
     };
     #define INFO(...) Logger::GetLogger()->info(__VA_ARGS__)
     #define WARN(...) Logger::GetLogger()->warn(__VA_ARGS__)
-    #define ERROR(...) Logger::GetLogger()->error(__VA_ARGS__)
+    #define ERROR(...) Logger::GetLogger()->error(__VA_ARGS__); exit(1)
 #endif

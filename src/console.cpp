@@ -8,6 +8,14 @@
 #include <sstream>
 
 #define GET_DATAPAK_NAME(x) const char* dName = arg.argArray[x].c_str()
+#define VALIDATE_ARGS(num)          \
+        do {                        \
+            if (arg.argArray.size() < num) \
+            {                       \
+                ERROR("Error: Invalid number of arguments provided!"); \
+            }                       \
+        } while(false)              \
+
 
 struct Argument {
     std::vector<std::string> argArray;
@@ -106,6 +114,7 @@ void handleArgs(int argc, char** argv, Datapak* dat) {
         ERROR("Currently not supporting live editing mode!");
     }
     else if (arg.argArray[0] == "add_dir") {
+        VALIDATE_ARGS(3);
         GET_DATAPAK_NAME(1);
         // Recursively find all files in the directory
         std::string rootpath = "";
@@ -126,6 +135,7 @@ void handleArgs(int argc, char** argv, Datapak* dat) {
 
     }
     else if (arg.argArray[0] == "add_file") {
+        VALIDATE_ARGS(3);
         GET_DATAPAK_NAME(1);
         // Check if the file being added is actually a file
         if (getPathType(arg.argArray[2].c_str()) != FILE_PATH) {
@@ -147,6 +157,7 @@ void handleArgs(int argc, char** argv, Datapak* dat) {
         }
     }
     else if (arg.argArray[0] == "list") {
+       VALIDATE_ARGS(2);
        GET_DATAPAK_NAME(1);
        dat->load(dName);
        INFO("The given datapak is home to {0} files. Listing them all: \n", dat->getNumChunks());
@@ -154,11 +165,13 @@ void handleArgs(int argc, char** argv, Datapak* dat) {
        INFO("\n");
     }
     else if (arg.argArray[0] == "rename") {
+        VALIDATE_ARGS(4);
         GET_DATAPAK_NAME(1);
         dat->load(dName);
         dat->rename(arg.argArray[2].c_str(), arg.argArray[3].c_str());
     }
     else if (arg.argArray[0] == "remove") {
+        VALIDATE_ARGS(3);
         GET_DATAPAK_NAME(1);
         dat->load(dName);
         dat->remove(arg.argArray[2].c_str());
